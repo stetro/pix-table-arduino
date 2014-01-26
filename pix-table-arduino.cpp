@@ -16,13 +16,10 @@ PixTable::~PixTable(void){
 void PixTable::Init(uint16_t size, uint8_t data, uint8_t clock){
 	strip = Adafruit_WS2801((uint16_t)size, (uint16_t)size, data, clock);
 	mode = PIX_TABLE_GAMEOFLIFE_MODE;
-	
 }
 void PixTable::begin(){
 	strip.begin();
-	// Turn LED's off
 	strip.show();
-	
 }
 void PixTable::loop(){
 	loopCounter++;
@@ -31,19 +28,34 @@ void PixTable::loop(){
 		case PIX_TABLE_GAMEOFLIFE_MODE:
 			gameOfLifeLoop();
 			break;
+		case PIX_TABLE_RAINBOW_MODE:
+			rainbowLoop();
+			break;
 	}
 }
+void PixTable::rainbow(){
+	mode = PIX_TABLE_RAINBOW_MODE;
+	rainbowLoopVar =0;
+}
+void PixTable::rainbowLoop(){
+	uint8_t i, j;
+	rainbowLoopVar++;
+	for (i=0; i < strip.numPixels(); i++) {
+		strip.setPixelColor(i, Wheel( ((i * 256 / strip.numPixels()) + rainbowLoopVar) % 256) );
+	}  
+	strip.show();   // write all the pixels out
+	delay(50);
+}
+
 void PixTable::gameOfLife(){
 	uint8_t x, y;
-	
+	mode = PIX_TABLE_GAMEOFLIFE_MODE;
 	gameOfLifeRepeats=0;
 	gameOfLifeActiveColor=0;
 	gameOfLifeSetColor=1;
-
 	for (x=0; x < STD_ACTIVE_GOF_LEDS; x++) {
 		field[random(5)][random(5)]=1;
 	}
-	
 }
 void PixTable::gameOfLifeLoop(){
 	uint8_t x, y;
@@ -60,13 +72,13 @@ void PixTable::gameOfLifeLoop(){
 			if(field[x][y] && gameOfLifeSetColor){
 				switch(gameOfLifeActiveColor){
 					case 0:
-						strip.setPixelColor(x, y,220,color[1],color[2]);	
+						strip.setPixelColor(x, y,STD_COLOR_REFRESH ,color[1],color[2]);	
 						break;
 					case 1:
-						strip.setPixelColor(x, y,color[0],220,color[2]);	
+						strip.setPixelColor(x, y,color[0],STD_COLOR_REFRESH ,color[2]);	
 						break;
 					case 2:
-						strip.setPixelColor(x, y,color[0],color[1],220);	
+						strip.setPixelColor(x, y,color[0],color[1],STD_COLOR_REFRESH );	
 						break;
 				}
 			}
@@ -93,9 +105,8 @@ void PixTable::gameOfLifeLoop(){
 
 	}
 	strip.show();
-	delay(80);
+	delay(50);
 }
-
 /* Helper functions */
 uint32_t PixTable::Color(byte r, byte g, byte b)
 {
