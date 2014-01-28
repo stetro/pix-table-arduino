@@ -20,6 +20,12 @@
 #ifndef PIX_TABLE_RAINBOW_MODE
 	#define PIX_TABLE_RAINBOW_MODE 1
 #endif
+#ifndef PIX_TABLE_MENU_MODE
+	#define PIX_TABLE_MENU_MODE 10
+#endif
+#ifndef PIX_TABLE_SNAKE_MODE
+	#define PIX_TABLE_SNAKE_MODE 2
+#endif
 #ifndef STD_ACTIVE_GOF_LEDS
 	#define STD_ACTIVE_GOF_LEDS 7+random(10)
 #endif
@@ -29,6 +35,8 @@
 
 class Adafruit_WS2801;
 
+
+
 class PixTable{
 	public:
 		PixTable();
@@ -37,12 +45,19 @@ class PixTable{
 			Init(uint16_t size, uint8_t data, uint8_t clock),
 			begin(),
 			loop(),
+			menu(),
 			rainbow(),
+			snake(),
+			pushLeft(),
+			pushRight(),
 			gameOfLife();
 
 	private:
 		void
 			rainbowLoop(),
+			menuLoop(),
+			reset(),
+			snakeLoop(),
 			gameOfLifeLoop();
 		uint8_t 
 			mode,
@@ -51,6 +66,11 @@ class PixTable{
 			gameOfLifeActiveColor,
 			gameOfLifeSetColor,
 			rainbowLoopVar,
+			menuPosition,
+			leftPushed(),
+			rightPushed(),
+			left,
+			right,
 			loopCounter;
 		uint32_t 
 			Color(byte r, byte g, byte b),
