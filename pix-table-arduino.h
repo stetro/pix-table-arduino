@@ -26,6 +26,19 @@
 #ifndef PIX_TABLE_SNAKE_MODE
 	#define PIX_TABLE_SNAKE_MODE 2
 #endif
+#ifndef SNAKE_RIGHT
+	#define SNAKE_RIGHT 0
+#endif
+#ifndef SNAKE_DOWN
+	#define SNAKE_DOWN 1
+#endif
+#ifndef SNAKE_LEFT
+	#define SNAKE_LEFT 2
+#endif
+#ifndef SNAKE_UP
+	#define SNAKE_UP 3
+#endif
+
 #ifndef STD_ACTIVE_GOF_LEDS
 	#define STD_ACTIVE_GOF_LEDS 7+random(10)
 #endif
@@ -34,7 +47,6 @@
 #endif
 
 class Adafruit_WS2801;
-
 
 
 class PixTable{
@@ -58,6 +70,9 @@ class PixTable{
 			menuLoop(),
 			reset(),
 			snakeLoop(),
+			renderSnake(),
+			renderApple(),
+			moveSnake(),
 			gameOfLifeLoop();
 		uint8_t 
 			mode,
@@ -69,6 +84,9 @@ class PixTable{
 			menuPosition,
 			leftPushed(),
 			rightPushed(),
+			snakeDirection,
+			snakeList[STD_TABLE_SIZE*STD_TABLE_SIZE][3],
+			snakeApple[2],
 			left,
 			right,
 			loopCounter;

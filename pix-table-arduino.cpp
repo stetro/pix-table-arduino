@@ -65,7 +65,17 @@ void PixTable::menuLoop(){
 	}
 	if(leftPushed()){
 		mode = menuPosition;
-		reset();
+		switch(menuPosition){
+			case PIX_TABLE_GAMEOFLIFE_MODE:
+				gameOfLife();
+				break;
+			case PIX_TABLE_RAINBOW_MODE:
+				rainbow();
+				break;
+			case PIX_TABLE_SNAKE_MODE:
+				snake();
+				break;
+		}
 	}else{
 		strip.show();
 	}
@@ -73,20 +83,119 @@ void PixTable::menuLoop(){
 void PixTable::snake(){
 	mode = PIX_TABLE_SNAKE_MODE;
 	reset();
+	snakeList[0][0] = 1;
+	snakeList[0][1] = 1;
+	snakeList[0][2] = 0;
+	snakeList[1][0] = 1;
+	snakeList[1][1] = 0;
+	snakeList[1][2] = 0;
+	snakeList[2][0] = 0;
+	snakeDirection = SNAKE_RIGHT;
+	snakeApple[0]=random(STD_TABLE_SIZE);
+	snakeApple[1]=random(STD_TABLE_SIZE);
 }
 void PixTable::snakeLoop(){
 	uint8_t r,l;
-
-
-
-
-	r = rightPushed();
+	if(loopCounter == 7){
+		renderSnake();
+		moveSnake();
+		renderApple();
+		loopCounter = 0;
+	}
 	l = leftPushed();
+	r = rightPushed();
 	if(r&&l){
 		menu();
-	}else{
-		strip.show();
+	}else if(r){
+		snakeDirection = ( snakeDirection + 1 ) % 4;
+	}else if(l){
+		if(snakeDirection == 0){
+			snakeDirection = 3;
+		}else{
+			snakeDirection = (snakeDirection -1 ) % 4;
+		}
 	}
+	strip.show();
+	delay(50);
+}
+void PixTable::moveSnake(){
+	uint8_t x,y,headX,headY,i;
+	switch(snakeDirection){
+		case SNAKE_RIGHT:
+			x = (snakeList[0][1]+1) % STD_TABLE_SIZE;
+			y = snakeList[0][2];
+			break;
+		case SNAKE_DOWN:
+			x = snakeList[0][1];
+			y = (snakeList[0][2]+1) % STD_TABLE_SIZE;
+			break;
+		case SNAKE_LEFT:
+			if(snakeList[0][1]==0){
+				x = STD_TABLE_SIZE-1;
+			}else{
+				x = (snakeList[0][1]-1) % STD_TABLE_SIZE;
+			}
+			y = snakeList[0][2];
+			break;		
+		case SNAKE_UP:
+			x = snakeList[0][1];
+			if(snakeList[0][2]==0){
+				y=STD_TABLE_SIZE-1;
+			}else{
+				y = (snakeList[0][2]-1) % STD_TABLE_SIZE;
+			}
+			break;
+	}
+	headX=x;
+	headY=y;
+	for(i=0;i<STD_TABLE_SIZE*STD_TABLE_SIZE;i++){
+		if(!snakeList[i][0]){
+			strip.setPixelColor(x,y,0,0,0);
+			break;
+		}
+		if(headX==snakeList[i][1]&&headY==snakeList[i][2]){
+			snake();
+			break;
+		}else{
+			uint8_t tx,ty;
+			tx=snakeList[i][1];
+			ty=snakeList[i][2];
+			snakeList[i][1]=x;
+			snakeList[i][2]=y;
+			x=tx;
+			y=ty;
+		}
+	}
+}
+void PixTable::renderSnake(){
+	uint8_t i;
+	for(i=0;i<STD_TABLE_SIZE*STD_TABLE_SIZE;i++){
+		if(snakeList[i][0]){
+			strip.setPixelColor(snakeList[i][1],snakeList[i][2],200,200,200);
+		}else{
+			break;
+		}
+	}
+}
+void PixTable::renderApple(){
+	uint8_t i,x,y;
+	if(snakeApple[0] == snakeList[0][1] && snakeApple[1]== snakeList[0][2]){
+		snakeApple[0]=random(STD_TABLE_SIZE);
+		snakeApple[1]=random(STD_TABLE_SIZE);
+		for(i=0;i<STD_TABLE_SIZE*STD_TABLE_SIZE;i++){
+			if(!snakeList[i][0]){
+				snakeList[i][0]=1;
+				snakeList[i][1]=x;
+				snakeList[i][2]=y;
+				snakeList[i+1][0]=0;
+				break;
+			}else{
+				x=snakeList[i][1];
+				y=snakeList[i][2];
+			}
+		}
+	}
+	strip.setPixelColor(snakeApple[0],snakeApple[1],0,200,0);
 }
 void PixTable::rainbow(){
 	mode = PIX_TABLE_RAINBOW_MODE;
