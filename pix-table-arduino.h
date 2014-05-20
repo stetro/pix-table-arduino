@@ -26,19 +26,6 @@
 #ifndef PIX_TABLE_SNAKE_MODE
 	#define PIX_TABLE_SNAKE_MODE 2
 #endif
-#ifndef SNAKE_RIGHT
-	#define SNAKE_RIGHT 0
-#endif
-#ifndef SNAKE_DOWN
-	#define SNAKE_DOWN 1
-#endif
-#ifndef SNAKE_LEFT
-	#define SNAKE_LEFT 2
-#endif
-#ifndef SNAKE_UP
-	#define SNAKE_UP 3
-#endif
-
 #ifndef STD_ACTIVE_GOF_LEDS
 	#define STD_ACTIVE_GOF_LEDS 7+random(10)
 #endif
@@ -58,39 +45,21 @@ class PixTable{
 			begin(),
 			loop(),
 			menu(),
-			rainbow(),
-			snake(),
 			pushLeft(),
-			pushRight(),
-			gameOfLife();
-
+			pushRight();
 	private:
 		void
-			rainbowLoop(),
 			menuLoop(),
-			reset(),
-			snakeLoop(),
-			renderSnake(),
-			renderApple(),
-			moveSnake(),
-			gameOfLifeLoop();
+			reset();
 		uint8_t 
-			mode,
-			field[STD_TABLE_SIZE][STD_TABLE_SIZE],
-			gameOfLifeRepeats,
-			gameOfLifeActiveColor,
-			gameOfLifeSetColor,
-			rainbowLoopVar,
 			menuPosition,
 			leftPushed(),
 			rightPushed(),
 			snakeDirection,
 			snakeList[STD_TABLE_SIZE*STD_TABLE_SIZE][3],
 			snakeApple[2],
+			mode,
 			left,
 			right,
 			loopCounter;
-		uint32_t 
-			Color(byte r, byte g, byte b),
-			Wheel(byte WheelPos);
 };
