@@ -6,8 +6,10 @@
 Adafruit_WS2801 strip;
 
 GameOfLife gameOfLifeModule =  GameOfLife();
-RainBow rainbowModule = RainBow();
+RainBow rainBowModule = RainBow();
 Snake snakeModule = Snake();
+FlappyBird flappyBirdModule = FlappyBird();
+Lander landerModule = Lander();
 
 PixTable::PixTable(){
 	Init((uint16_t)STD_TABLE_SIZE, STD_DATA_PIN, STD_CLOCK_PIN);
@@ -38,10 +40,16 @@ void PixTable::loop(){
 			gameOfLifeModule.loop(&strip, loopCounter,right,left);
 			break;
 		case PIX_TABLE_RAINBOW_MODE:
-			rainbowModule.loop(&strip, loopCounter, right, left);
+			rainBowModule.loop(&strip, loopCounter, right, left);
 			break;
 		case PIX_TABLE_SNAKE_MODE:
 			snakeModule.loop(&strip, loopCounter, right, left);
+			break;
+		case PIX_TABLE_FLAPPYBIRD_MODE:
+			flappyBirdModule.loop(&strip, loopCounter, right, left);
+			break;
+		case PIX_TABLE_LANDER_MODE:
+			landerModule.loop(&strip, loopCounter, right, left);
 			break;
 		case PIX_TABLE_MENU_MODE:
 			menuLoop();
@@ -66,15 +74,17 @@ void PixTable::menu(){
 void PixTable::menuLoop(){
 	uint8_t x;
 	strip.setPixelColor(PIX_TABLE_GAMEOFLIFE_MODE, STD_TABLE_SIZE-1,gameOfLifeModule.getModuleColor());
-	strip.setPixelColor(PIX_TABLE_RAINBOW_MODE,STD_TABLE_SIZE-1,rainbowModule.getModuleColor());
+	strip.setPixelColor(PIX_TABLE_RAINBOW_MODE,STD_TABLE_SIZE-1,rainBowModule.getModuleColor());
 	strip.setPixelColor(PIX_TABLE_SNAKE_MODE,STD_TABLE_SIZE-1,snakeModule.getModuleColor());
+	strip.setPixelColor(PIX_TABLE_FLAPPYBIRD_MODE,STD_TABLE_SIZE-1,flappyBirdModule.getModuleColor());
+	strip.setPixelColor(PIX_TABLE_LANDER_MODE,STD_TABLE_SIZE-1,landerModule.getModuleColor());
 
 	for (x = 0; x < STD_TABLE_SIZE; ++x){
 		strip.setPixelColor(x,STD_TABLE_SIZE-2,0);
 	}
 	strip.setPixelColor(menuPosition,STD_TABLE_SIZE-2,200,200,200);
 	if(rightPushed()){
-		menuPosition = (menuPosition + 1) % 3;
+		menuPosition = (menuPosition + 1) % MODULE_COUNT;
 	}
 	if(leftPushed()){
 		mode = menuPosition;
@@ -83,10 +93,16 @@ void PixTable::menuLoop(){
 				gameOfLifeModule.initialize(&strip);
 				break;
 			case PIX_TABLE_RAINBOW_MODE:
-				rainbowModule.initialize(&strip);
+				rainBowModule.initialize(&strip);
 				break;
 			case PIX_TABLE_SNAKE_MODE:
 				snakeModule.initialize(&strip);
+				break;
+			case PIX_TABLE_FLAPPYBIRD_MODE:
+				flappyBirdModule.initialize(&strip);
+				break;
+			case PIX_TABLE_LANDER_MODE:
+				landerModule.initialize(&strip);
 				break;
 		}
 		reset();

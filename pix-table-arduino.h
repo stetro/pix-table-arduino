@@ -26,12 +26,22 @@
 #ifndef PIX_TABLE_SNAKE_MODE
 	#define PIX_TABLE_SNAKE_MODE 2
 #endif
+#ifndef PIX_TABLE_FLAPPYBIRD_MODE
+	#define PIX_TABLE_FLAPPYBIRD_MODE 3
+#endif
+#ifndef PIX_TABLE_LANDER_MODE
+	#define PIX_TABLE_LANDER_MODE 4
+#endif
 #ifndef STD_ACTIVE_GOF_LEDS
 	#define STD_ACTIVE_GOF_LEDS 7+random(10)
 #endif
 #ifndef STD_COLOR_REFRESH
 	#define STD_COLOR_REFRESH 200
 #endif
+#ifndef MODULE_COUNT
+	#define MODULE_COUNT 5
+#endif
+
 
 class Adafruit_WS2801;
 

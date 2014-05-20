@@ -13,3 +13,5 @@ void Module::initialize(Adafruit_WS2801 * strip) {};
 #include "GameOfLife.cpp"
 #include "RainBow.cpp"
 #include "Snake.cpp"
+#include "FlappyBird.cpp"
+#include "Lander.cpp"

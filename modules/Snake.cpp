@@ -72,6 +72,7 @@ void Snake::loop(Adafruit_WS2801 * strip, uint8_t loopCounter, uint8_t right, ui
 			strip->setPixelColor(snake[x][0] ,snake[x][1] ,0x00FF00);
 			if(x>0 && snake[x][0]==previous[0] && snake[x][1]==previous[1]){
 				initialize(strip);
+				return;
 			}
 		}else{
 			break;
